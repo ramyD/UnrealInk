@@ -89,11 +89,15 @@ void FInkModule::StartupModule()
 
 	// TODO: For packaged builds, this directory should be the engine binaries directory, and the binaries need to be copied in
 
-	FString MonoSearchPath = FPaths::EnginePluginsDir() + "UnrealInk/ThirdParty/Mono/Assemblies";
-	MonoPreloadSearchPaths.Add(MonoSearchPath);
+	FString localMonoPath = FPaths::ProjectPluginsDir() + "UnrealInk/ThirdParty/Mono/Assemblies";
+	FString engineMonoPath = FPaths::EnginePluginsDir() + "UnrealInk/ThirdParty/Mono/Assemblies";
+	MonoPreloadSearchPaths.Add(localMonoPath);
+	MonoPreloadSearchPaths.Add(engineMonoPath);
 
-	FString InkSearchPath = FPaths::EnginePluginsDir() + "UnrealInk/ThirdParty/Ink/";
-	MonoPreloadSearchPaths.Add(InkSearchPath);
+	FString localInkPath = FPaths::ProjectPluginsDir() + "UnrealInk/ThirdParty/Ink/";
+	FString engineInkPath = FPaths::EnginePluginsDir() + "UnrealInk/ThirdParty/Ink/";
+	MonoPreloadSearchPaths.Add(localInkPath);
+	MonoPreloadSearchPaths.Add(engineInkPath);
 
 	mono_install_assembly_preload_hook(assembly_preload_hook, NULL);
 

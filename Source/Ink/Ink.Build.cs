@@ -33,7 +33,7 @@ public class Ink : ModuleRules
 
         PublicIncludePaths.AddRange(
 			new string[] {
-				"Ink/Public"
+				Path.Combine(ModulePath, "Public")
 				// ... add public include paths required here ...
 			}
 			);
@@ -41,7 +41,7 @@ public class Ink : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"Ink/Private",
+				Path.Combine(ModulePath, "Private"),
                  Path.Combine(ThirdPartyPath, "Mono", "include")
             }
 			);
