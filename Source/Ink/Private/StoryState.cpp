@@ -3,6 +3,7 @@
 #include "StoryState.h"
 
 #include "Ink.h"
+#include "MonoBaseClassImpl.h"
 
 #include <mono/jit/jit.h>
 

@@ -2,6 +2,7 @@
 
 #include "Story.h"
 
+#include "MonoBaseClassImpl.h"
 #include "StoryAsset.h"
 #include "StoryState.h"
 #include "Choice.h"
