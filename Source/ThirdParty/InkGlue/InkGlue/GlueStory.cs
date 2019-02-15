@@ -57,6 +57,11 @@ namespace InkGlue
 			return new GlueStoryState(_story.state);
 		}
 
+        public GlueVariablesState VariablesState()
+        {
+            return new GlueVariablesState(_story.variablesState);
+        }
+
 		public bool HasError()
 		{
 			return _story.hasError;

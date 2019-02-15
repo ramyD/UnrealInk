@@ -8,21 +8,27 @@
     ".NETCoreApp,Version=v2.0": {
       "InkGlue/1.0.0": {
         "dependencies": {
-          "ink-engine-runtime": "1.0.6803.20898",
+          "ink-engine-runtime": "1.0.6819.21621",
           "ink_compiler": "1.0.6803.20900"
         },
         "runtime": {
           "InkGlue.dll": {}
         }
       },
-      "ink-engine-runtime/1.0.6803.20898": {
+      "ink-engine-runtime/1.0.6819.21621": {
         "runtime": {
-          "ink-engine-runtime.dll": {}
+          "ink-engine-runtime.dll": {
+            "assemblyVersion": "1.0.6819.21621",
+            "fileVersion": "1.0.6819.21621"
+          }
         }
       },
       "ink_compiler/1.0.6803.20900": {
         "runtime": {
-          "ink_compiler.dll": {}
+          "ink_compiler.dll": {
+            "assemblyVersion": "1.0.6803.20900",
+            "fileVersion": "1.0.6803.20900"
+          }
         }
       }
     }
@@ -33,7 +39,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "ink-engine-runtime/1.0.6803.20898": {
+    "ink-engine-runtime/1.0.6819.21621": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

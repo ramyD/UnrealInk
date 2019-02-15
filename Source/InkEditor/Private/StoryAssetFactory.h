@@ -10,9 +10,7 @@
 UCLASS(hidecategories = Object)
 class UStoryAssetFactory : public UFactory
 {
-	GENERATED_BODY()
-
-	UStoryAssetFactory();
+	GENERATED_UCLASS_BODY()
 
 	virtual bool FactoryCanImport(const FString& Filename);
 

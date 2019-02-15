@@ -17,4 +17,7 @@ public:
 
 	UFUNCTION()
 	FString CompileToJson();
+
+	UFUNCTION()
+	TArray<FString> GetErrors();
 };

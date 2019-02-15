@@ -124,6 +124,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Ink)
 	void RemoveVariableObserver(const FVariableObserver& observer, FString specificVariableName = "");
 
+	UFUNCTION(BlueprintPure, Category = Ink)
+	class UVariablesState* VariablesState();
+
+	UFUNCTION(BlueprintCallable, Category = Ink)
+	void SetVariableState(const TMap<FString, FInkVar>& state);
+
 private:
 	typedef TPair<int, FString> FDelegateMapKey;
 	static TMap<FDelegateMapKey, TArray<FVariableObserver>> delegateMap;

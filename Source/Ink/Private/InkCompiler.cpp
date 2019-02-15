@@ -36,3 +36,17 @@ FString UInkCompiler::CompileToJson()
 	return MonoInvoke<FString>("CompileToJson", NULL);
 }
 
+TArray<FString> UInkCompiler::GetErrors()
+{
+	TArray<FString> errors;
+
+	MonoArray* result = MonoInvoke<MonoArray*>("GetErrors", nullptr);
+	for (int i = 0; i < mono_array_length(result); i++)
+	{
+		MonoString* variableName = mono_array_get(result, MonoString*, i);
+		errors.Add(FString(mono_string_to_utf8(variableName)));
+	}
+
+	return errors;
+}
+

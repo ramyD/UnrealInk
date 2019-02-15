@@ -9,9 +9,11 @@
 #include "StoryAsset.h"
 #include "InkCompiler.h"
 #include "Misc/FileHelper.h"
+#include "FeedbackContext.h"
+#include "EditorFramework/AssetImportData.h"
 
 ////////////////////////////////////////////////////////
-UStoryAssetFactory::UStoryAssetFactory()
+UStoryAssetFactory::UStoryAssetFactory(const FObjectInitializer& ObjectInitializer)
 {
 	Formats.Add(FString(TEXT("ink;")) + NSLOCTEXT("UTextAssetFactory", "FormatTxt", "Ink Story File").ToString());
 	Formats.Add(FString(TEXT("json;")) + NSLOCTEXT("UTextAssetFactory", "FormatTxt", "Compiled Ink Story File").ToString());
@@ -44,6 +46,7 @@ UObject * UStoryAssetFactory::FactoryCreateFile(UClass * InClass, UObject * InPa
 			FString Assetname = InName.ToString();
 			NewStory = NewObject<UStoryAsset>(InParent, InClass, FName(*(Assetname.LeftChop(4))), Flags);
 			NewStory->CompiledStory = FileContents;
+			NewStory->AssetImportData->Update(CurrentFilename);
 		}
 
 		bOutOperationCanceled = false;
@@ -59,10 +62,15 @@ UObject * UStoryAssetFactory::FactoryCreateFile(UClass * InClass, UObject * InPa
 			UInkCompiler* compiler = UInkCompiler::NewInkCompiler(FileContents, Filename);
 			FString compiledStory = compiler->CompileToJson();
 
+			// Check for errors
+			TArray<FString> errors = compiler->GetErrors();
+			for (int i = 0; i < errors.Num(); i++)
+				Warn->Log(errors[i]);
 
 			// Run the function
 			NewStory = NewObject<UStoryAsset>(InParent, InClass, InName, Flags);
 			NewStory->CompiledStory = compiledStory;
+			NewStory->AssetImportData->Update(CurrentFilename);
 
 			bOutOperationCanceled = false;
 

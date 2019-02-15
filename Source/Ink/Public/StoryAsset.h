@@ -18,4 +18,14 @@ public:
 
 	UPROPERTY()
 	FString CompiledStory;
+
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(VisibleAnywhere, Instanced, Category = ImportSettings)
+	class UAssetImportData* AssetImportData;
+
+	// UObject interface
+	virtual void PostInitProperties() override;
+	virtual void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
+	// End of UObject interface
+#endif
 };

@@ -5,6 +5,7 @@
 #include "MonoBaseClassImpl.h"
 #include "StoryAsset.h"
 #include "StoryState.h"
+#include "VariablesState.h"
 #include "Choice.h"
 #include "Ink.h"
 #include "Modules/ModuleManager.h"
@@ -137,6 +138,19 @@ UStoryState* UStory::State()
 	MonoObject* MonoStateInstance = MonoInvoke<MonoObject*>("State", NULL);
 	return UStoryState::NewStoryState(MonoStateInstance);
 }
+
+////////////////////////////////////////////////////////
+UVariablesState* UStory::VariablesState()
+{
+	MonoObject* MonoVariablesStateInstance = MonoInvoke<MonoObject*>("VariablesState", nullptr);
+	return UVariablesState::NewVariablesState(MonoVariablesStateInstance);
+}
+
+////////////////////////////////////////////////////////
+void UStory::SetVariableState(const TMap<FString, FInkVar>& state)
+{
+}
+
 
 ////////////////////////////////////////////////////////
 bool UStory::HasError()

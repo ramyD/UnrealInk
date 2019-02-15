@@ -23,25 +23,40 @@ namespace InkGlue
 
 		public GlueInkCompiler(string storyFileContents, string storyFileName)
 		{
+            errors = new List<string>();
+
 			// Create compiler object
 			compiler = new Compiler(storyFileContents, new Compiler.Options
 			{
 				sourceFilename = storyFileName,
 				pluginNames = null,
 				countAllVisits = false,
-				errorHandler = null, // TODO: Make an actual error handler that's useful
+				errorHandler = OnError,
 				fileHandler = this
 			});
 
 			story = compiler.Compile();
 		}
 
+        
+
+        private void OnError(string msg, ErrorType type)
+        {
+            errors.Add(string.Format("{0}: {1}", msg, type));
+        }
+
 		public string CompileToJson()
 		{
 			return story.ToJsonString();
 		}
 
+        public string[] GetErrors()
+        {
+            return errors.ToArray();
+        }
+
 		Story story;
 		Compiler compiler;
+        List<string> errors;
 	}
 }
