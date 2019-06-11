@@ -23,6 +23,11 @@
       "Name": "InkEditor",
       "Type": "Editor",
       "LoadingPhase": "Default"
+    },
+    {
+      "Name": "InkGame",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     }
   ]
 }
