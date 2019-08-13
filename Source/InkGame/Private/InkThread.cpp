@@ -4,6 +4,7 @@
 
 // Game includes
 #include "InkGame.h"
+#include "TagList.h"
 
 // UnrealInk includes
 #include "Story.h"
@@ -142,7 +143,9 @@ bool UInkThread::ExecuteInternal(UStory * pStory)
 			}
 
 			// Forward to handler
-			OnLineWritten(line);
+			UTagList* pTags = NewObject<UTagList>(this, UTagList::StaticClass());
+			pTags->Initialize(tags);
+			OnLineWritten(line, pTags);
 		}
 
 		// Handle choice block

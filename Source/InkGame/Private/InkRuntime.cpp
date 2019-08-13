@@ -98,7 +98,10 @@ UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path,
 
 	// Otherwise, pop off the current thread
 	if (mpCurrentThread != nullptr)
+	{
 		mpCurrentThread->PopState(mpRuntime);
+		mpCurrentThread = nullptr;
+	}
 
 	// Execute the newly created thread
 	if (!pThread->Execute(mpRuntime))

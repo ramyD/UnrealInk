@@ -8,13 +8,14 @@
 
 class UStory;
 class UChoice;
+class UTagList;
 class AInkRuntime;
 
 DECLARE_DYNAMIC_DELEGATE_ThreeParams(FTagFunctionDelegate, FString, FirstParameter, FString, SecondParameter, FString, ThirdParameter);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTagFunctionMulticastDelegate, FString, FirstParameter, FString, SecondParameter, FString, ThirdParameter);
 
 /**
- * 
+ * Base class for all ink threads
  */
 UCLASS(Blueprintable)
 class INKGAME_API UInkThread : public UObject
@@ -49,7 +50,7 @@ public:
 
 	// Called when the thread has printed a new line
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnLineWritten(const FString& line);
+	void OnLineWritten(const FString& line, UTagList* tags);
 
 	// Called when a tag has been processed on the current line
 	UFUNCTION(BlueprintImplementableEvent)

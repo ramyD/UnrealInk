@@ -6,6 +6,7 @@ public class InkGame : ModuleRules
 	public InkGame( ReadOnlyTargetRules target ) : base(target)
 	{
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        OptimizeCode = CodeOptimization.Never;
 
         PublicDependencyModuleNames.AddRange( new string[] { "Core", "CoreUObject", "Engine", "Ink" } );
 		PrivateDependencyModuleNames.AddRange( new string[] { "RenderCore" } );
