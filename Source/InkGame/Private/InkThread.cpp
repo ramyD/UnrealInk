@@ -35,6 +35,16 @@ void UInkThread::RegisterTagFunction(const FString & functionName, const FTagFun
 	mTagFunctions.FindOrAdd(functionName).Add(function);
 }
 
+void UInkThread::RegisterExternalFunction(const FString& functionName, const FExternalFunctionDelegate& function)
+{
+	// Notify the runtime. It needs to make sure the external function is registered with Ink
+	mpRuntime->ExternalFunctionRegistered(functionName);
+	
+	// Add to external functions registration map
+	// TODO: Check for duplicates?
+	mExternalFunctions.Add(functionName, function);
+}
+
 void UInkThread::Initialize(FString path, AInkRuntime* runtime)
 {
 	mStartPath = path;
@@ -179,6 +189,18 @@ bool UInkThread::ExecuteInternal(UStory * pStory)
 
 	// There's more to go. Return false to put us on the waiting list.
 	return false;
+}
+
+bool UInkThread::HandleExternalFunction(const FString& functionName, TArray<FInkVar> arguments, FInkVar& result)
+{
+	// Check to see if we even know about this function
+	const FExternalFunctionDelegate* pDelegate = mExternalFunctions.Find(functionName);
+	if (pDelegate == nullptr)
+		return false;
+
+	// If so, execute and return
+	pDelegate->Execute(arguments, result);
+	return true;
 }
 
 bool UInkThread::Execute(UStory * pStory)

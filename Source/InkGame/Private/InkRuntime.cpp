@@ -83,6 +83,36 @@ void AInkRuntime::Tick(float DeltaTime)
 	}
 }
 
+void AInkRuntime::ExternalFunctionRegistered(FString functionName)
+{
+	// Add to registered function set
+	bool alreadyRegistered = false;
+	mRegisteredFunctions.Add(functionName, &alreadyRegistered);
+
+	// If we've never head of this function before, register it with the Story runtime
+	if (!alreadyRegistered) 
+	{
+		FExternalFunctionHandler handler;
+		handler.BindDynamic(this, &AInkRuntime::ExternalFunctionHandler);
+		mpRuntime->RegisterExternalFunction(functionName, handler);
+	}
+}
+
+FInkVar AInkRuntime::ExternalFunctionHandler(FString functionName, TArray<FInkVar> arguments)
+{
+	checkf(mpCurrentThread != nullptr, TEXT("Got callback for external function '%s' but no thread is currently active!"), *functionName);
+
+	FInkVar result;
+	bool handled = mpCurrentThread->HandleExternalFunction(functionName, arguments, result);
+	if (!handled)
+	{
+		UE_LOG(InkRuntime, Warning, TEXT("Currently running thread has no implementation of external function %s"), *functionName);
+		return FInkVar();
+	}
+
+	return result;
+}
+
 UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path, bool startImmediately)
 {
 	// Instantiate the thread
@@ -104,11 +134,16 @@ UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path,
 	}
 
 	// Execute the newly created thread
+	mpCurrentThread = pThread;
 	if (!pThread->Execute(mpRuntime))
 	{
 		// If it hasn't finished immediately, add it to the threads list
 		mThreads.Add(pThread);
-		mpCurrentThread = pThread;
+	}
+	else
+	{
+		// Clear current thread pointer if we ended immediately
+		mpCurrentThread = nullptr;
 	}
 
 	return pThread;

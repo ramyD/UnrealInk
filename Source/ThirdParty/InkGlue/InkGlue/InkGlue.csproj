@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\..\..\Ink\ThirdParty\Ink\</OutputPath>
+    <OutputPath>..\..\..\..\ThirdParty\Ink\</OutputPath>
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InkVar.h"
 #include "GameFramework/Actor.h"
 #include "InkRuntime.generated.h"
 
@@ -32,6 +33,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UStoryAsset* StoryAsset;
 
+	// Called by threads when they want to register an external function
+	void ExternalFunctionRegistered(FString functionName);
+
+private:
+	UFUNCTION()
+	FInkVar ExternalFunctionHandler(FString functionName, TArray<FInkVar> arguments);
+
 private:
 	UPROPERTY()
 	class UStory* mpRuntime;
@@ -41,4 +49,7 @@ private:
 
 	UPROPERTY()
 	UInkThread* mpCurrentThread;
+
+	UPROPERTY()
+	TSet<FString> mRegisteredFunctions;
 };

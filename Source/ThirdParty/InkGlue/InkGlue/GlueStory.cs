@@ -16,6 +16,82 @@ namespace InkGlue
 		[DllImport("__Internal")]
 		public static extern void ObserverCallbackString(int instanceId, [MarshalAs(UnmanagedType.LPStr)] string variableName, string newValue);
 
+        public enum InkVarType
+        {
+            Float,
+            Int,
+            String,
+            None
+        }
+
+        // DO NOT MAKE CHANGES TO THIS STRUCTURE WITHOUT CHANGING Story.h::FInkVarInterop in C++
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public struct InkVarInterop
+        {
+            [MarshalAs(UnmanagedType.U1)]
+            public InkVarType Type;
+
+            [MarshalAs(UnmanagedType.R4)]
+            public float FloatVal;
+
+            [MarshalAs(UnmanagedType.I4)]
+            public int IntVal;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public string StringVal;
+
+            public InkVarInterop(object arg)
+            {
+                FloatVal = 0; IntVal = 0; StringVal = null;
+
+                if (arg is float)
+                {
+                    FloatVal = (float)arg;
+                    Type = InkVarType.Float;
+                }
+                else if (arg is int)
+                {
+                    IntVal = (int)arg;
+                    Type = InkVarType.Int;
+                }
+                else if (arg is string)
+                {
+                    StringVal = (string)arg;
+                    Type = InkVarType.String;
+                }
+                else
+                {
+                    throw new Exception("Invalid Ink Variable Type: " + arg.GetType());
+                }
+            }
+
+            public object BoxedValue
+            {
+                get
+                {
+                    switch(Type)
+                    {
+                        case InkVarType.Float:
+                            return FloatVal;
+                        case InkVarType.Int:
+                            return IntVal;
+                        case InkVarType.String:
+                            return StringVal;
+                        default:
+                        case InkVarType.None:
+                            return null;
+                    }
+                }
+            }
+        }
+
+        [DllImport("__Internal")]
+        public static extern InkVarInterop ExternalFunctionCallback(
+            [MarshalAs(UnmanagedType.I4)] int instanceId,
+            [MarshalAs(UnmanagedType.LPStr)] string functionName, 
+            [MarshalAs(UnmanagedType.U4)] uint numArguments,
+            [MarshalAs(UnmanagedType.LPArray)] InkVarInterop[] arguments);
+
 		public GlueStory(string JsonString, int instanceId)
 		{
 			_story = new Story(JsonString);
@@ -120,6 +196,34 @@ namespace InkGlue
 		{
 			_story.ChoosePathString(path, resetCallStack, arguments);
 		}
+
+        object FunctionImplInternal(string functionName, object[] args)
+        {
+            // Convert arguments into Interop Variable structs
+            InkVarInterop[] cArgs = new InkVarInterop[args.Length];
+            for (int i = 0; i < args.Length; i++)
+            {
+                cArgs[i] = new InkVarInterop(args[i]);
+            }
+
+            // Call the callback
+            InkVarInterop var = ExternalFunctionCallback(_instanceId, functionName, (uint)cArgs.Length, cArgs);
+
+            // Box the return value and send it back to the ink runtime
+            return var.BoxedValue;
+        }
+
+        public void RegisterFunction(string functionName)
+        {
+            // Bind to internal C# method
+            _story.BindExternalFunctionGeneral(functionName, args => FunctionImplInternal(functionName, args));
+        }
+
+        public void UnregisterFunction(string functionName)
+        {
+            // Unbind
+            _story.UnbindExternalFunction(functionName);
+        }
 
 		void InternalObserve(string variableName, object newValue)
 		{

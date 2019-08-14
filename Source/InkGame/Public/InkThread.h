@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "InkVar.h"
 #include "InkThread.generated.h"
 
 class UStory;
@@ -13,6 +14,8 @@ class AInkRuntime;
 
 DECLARE_DYNAMIC_DELEGATE_ThreeParams(FTagFunctionDelegate, FString, FirstParameter, FString, SecondParameter, FString, ThirdParameter);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTagFunctionMulticastDelegate, FString, FirstParameter, FString, SecondParameter, FString, ThirdParameter);
+
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FExternalFunctionDelegate, const TArray<FInkVar>&, Arguments, FInkVar&, Result);
 
 /**
  * Base class for all ink threads
@@ -71,6 +74,9 @@ public:
 	// Registers a callback for a named "tag function"
 	UFUNCTION(BlueprintCallable)
 	void RegisterTagFunction(const FString& functionName, const FTagFunctionDelegate& function);
+
+	UFUNCTION(BlueprintCallable)
+	void RegisterExternalFunction(const FString& functionName, const FExternalFunctionDelegate& function);
 	
 private:
 	friend class AInkRuntime;
@@ -82,6 +88,8 @@ private:
 	bool CanExecute() const;
 
 	bool ExecuteInternal(UStory* pStory);
+
+	bool HandleExternalFunction(const FString& functionName, TArray<FInkVar> arguments, FInkVar& result);
 
 private:
 	FString mState;
@@ -100,4 +108,7 @@ private:
 
 	UPROPERTY()
 	TMap<FString, FTagFunctionMulticastDelegate> mTagFunctions;
+
+	UPROPERTY()
+	TMap<FString, FExternalFunctionDelegate> mExternalFunctions;
 };

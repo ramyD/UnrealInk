@@ -15,7 +15,9 @@
 
 
 int UStory::instanceCounter = 0;
+
 TMap<TPair<int, FString>, TArray<FVariableObserver>> UStory::delegateMap({});
+TMap<TPair<int, FString>, FExternalFunctionHandler> UStory::funcMap({});
 
 ////////////////////////////////////////////////////////
 UStory::UStory()
@@ -45,6 +47,24 @@ extern "C" __declspec(dllexport) void ObserverCallbackString(int instanceId, con
 	}
 }
 
+extern "C" __declspec(dllexport) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs)
+{
+	// Create argument array
+	TArray<FInkVar> arguments;
+	for (uint32 i = 0; i < numArgs; i++) {
+		arguments.Add(FInkVar(pArgs[i]));
+	}
+
+	// Get the handler for this function from the story map
+	const FExternalFunctionHandler& handler = UStory::funcMap[UStory::FDelegateMapKey(instanceId, FString(functionName))];
+
+	// Call handler
+	FInkVar result = handler.Execute(FString(functionName), arguments);
+
+	// Return result
+	return result.ToInterop();
+}
+
 UStory::~UStory()
 {
 	for (auto& element : delegateMap)
@@ -52,6 +72,15 @@ UStory::~UStory()
 		if (element.Key.Key == instanceId)
 		{
 			delegateMap.Remove(element.Key);
+			break;
+		}
+	}
+
+	for (auto& element : funcMap)
+	{
+		if (element.Key.Key == instanceId)
+		{
+			funcMap.Remove(element.Key);
 			break;
 		}
 	}
@@ -86,6 +115,7 @@ UStory* UStory::NewStory(UStoryAsset* StoryAsset)
 	// Manually added methods (have unique parameters)
 	NewStory->ManualMethodBind("ObserveVariable", 1);
 	NewStory->ManualMethodBind("RemoveVariableObserver", 1);
+	NewStory->ManualMethodBind("RegisterFunction", 1);
 
 	return NewStory;
 }
@@ -151,6 +181,21 @@ void UStory::SetVariableState(const TMap<FString, FInkVar>& state)
 {
 }
 
+////////////////////////////////////////////////////////
+void UStory::RegisterExternalFunction(FString functionName, const FExternalFunctionHandler& function)
+{
+	// Create Mono string
+	MonoString* MonoName = mono_string_new(mono_domain_get(), TCHAR_TO_ANSI(*functionName));
+	void* args[1];
+	args[0] = MonoName;
+
+	// Invoke mono method
+	MonoInvoke<void>("RegisterFunction", args);
+
+	// Register in map
+	FDelegateMapKey key = FDelegateMapKey(instanceId, functionName);
+	funcMap.Add(key, function);
+}
 
 ////////////////////////////////////////////////////////
 bool UStory::HasError()
