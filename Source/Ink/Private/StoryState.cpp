@@ -45,6 +45,16 @@ void UStoryState::LoadJson(FString Json)
 }
 
 ////////////////////////////////////////////////////////
+void UStoryState::LoadJsonButMaintainGlobalState(FString Json)
+{
+	MonoString* MonoJson = mono_string_new(mono_domain_get(), TCHAR_TO_ANSI(*Json));
+	void* args[1];
+	args[0] = MonoJson;
+
+	MonoInvoke<void>("LoadJsonButMaintainGlobalState", args);
+}
+
+////////////////////////////////////////////////////////
 int UStoryState::VisitCountAtPathString(FString PathString)
 {
 	MonoString* MonoPath = mono_string_new(mono_domain_get(), TCHAR_TO_ANSI(*PathString));

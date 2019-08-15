@@ -130,7 +130,7 @@ namespace InkGlue
 
 		public GlueStoryState State()
 		{
-			return new GlueStoryState(_story.state);
+			return new GlueStoryState(_story.state, _story);
 		}
 
         public GlueVariablesState VariablesState()

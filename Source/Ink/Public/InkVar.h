@@ -50,3 +50,43 @@ struct FInkVar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ink")
 	FString stringVar;
 };
+
+UCLASS()
+class INK_API UInkVarLibrary : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+	
+public:
+	UFUNCTION(BlueprintPure, meta=(DisplayName="String (Ink Var)", CompactNodeTitle="->", BlueprintAutocast), Category="Ink")
+	static FString Conv_InkVarString(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Int (Ink Var)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static int Conv_InkVarInt(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Float (Ink Var)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static float Conv_InkVarFloat(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Name (Ink Var)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FName Conv_InkVarName(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Text (Ink Var)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FText Conv_InkVarText(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Bool (Ink Var)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static bool Conv_InkVarBool(const FInkVar& InkVar);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Ink Var (String)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FInkVar Conv_StringInkVar(const FString& String);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Ink Var (Int)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FInkVar Conv_IntInkVar(int Number);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Ink Var (Float)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FInkVar Conv_FloatInkVar(float Number);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Ink Var (Text)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FInkVar Conv_TextInkVar(const FText& Text);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Ink Var (Bool)", CompactNodeTitle = "->", BlueprintAutocast), Category = "Ink")
+	static FInkVar Conv_BoolInkVar(bool Boolean);
+};

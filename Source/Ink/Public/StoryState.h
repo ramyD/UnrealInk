@@ -23,6 +23,9 @@ public:
 	void LoadJson(FString Json);
 
 	UFUNCTION(BlueprintCallable, Category = Ink)
+	void LoadJsonButMaintainGlobalState(FString Json);
+
+	UFUNCTION(BlueprintCallable, Category = Ink)
 	int VisitCountAtPathString(FString PathString);
 
 	UFUNCTION(BlueprintCallable, Category = Ink)

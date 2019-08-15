@@ -59,24 +59,8 @@ void UInkThread::PushState(UStory * pStory)
 	if (!ensureMsgf(!mbIsStatePushed, TEXT("Attempting to push ink thread that is already active!")))
 		return;
 
-	// Backup variables
-	TMap<FString, FInkVar> variableCache;
-	UVariablesState* pState = pStory->VariablesState();
-	TArray<FString> names = pState->GetVariables();
-	for (auto iter = names.CreateConstIterator(); iter; ++iter)
-	{
-		FInkVar var = pState->GetVariable(*iter);
-		variableCache.Add(*iter, var);
-	}
-
-	// Restore state from store
-	pStory->State()->LoadJson(mState);
-
-	// Restore global variables from cache
-	for (auto iter = variableCache.CreateConstIterator(); iter; ++iter)
-	{
-		pState->SetVariable(iter.Key(), iter.Value());
-	}
+	// Restore state from our store without disrupting global state (variables, visit counts, turn indices)
+	pStory->State()->LoadJsonButMaintainGlobalState(mState);
 
 	// Null out state
 	mbIsStatePushed = true;

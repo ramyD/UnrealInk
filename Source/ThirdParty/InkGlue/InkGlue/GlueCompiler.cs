@@ -47,7 +47,7 @@ namespace InkGlue
 
 		public string CompileToJson()
 		{
-			return story.ToJsonString();
+            return story.ToJson();
 		}
 
         public string[] GetErrors()
