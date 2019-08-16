@@ -13,6 +13,7 @@ namespace InkGlue
 		{
 			var workingDir = Directory.GetCurrentDirectory();
 			var fullRootInkPath = Path.Combine(workingDir, includeName);
+            filenames.Add(fullRootInkPath);
 			return fullRootInkPath;
 		}
 
@@ -24,9 +25,10 @@ namespace InkGlue
 		public GlueInkCompiler(string storyFileContents, string storyFileName)
 		{
             errors = new List<string>();
+            filenames = new List<string>();
 
-			// Create compiler object
-			compiler = new Compiler(storyFileContents, new Compiler.Options
+            // Create compiler object
+            compiler = new Compiler(storyFileContents, new Compiler.Options
 			{
 				sourceFilename = storyFileName,
 				pluginNames = null,
@@ -55,8 +57,14 @@ namespace InkGlue
             return errors.ToArray();
         }
 
+        public string[] GetPaths()
+        {
+            return filenames.ToArray();
+        }
+
 		Story story;
 		Compiler compiler;
         List<string> errors;
+        List<string> filenames;
 	}
 }

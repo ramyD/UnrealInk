@@ -50,3 +50,17 @@ TArray<FString> UInkCompiler::GetErrors()
 	return errors;
 }
 
+TArray<FString> UInkCompiler::GetPaths()
+{
+	TArray<FString> paths;
+
+	MonoArray* result = MonoInvoke<MonoArray*>("GetPaths", nullptr);
+	for (int i = 0; i < mono_array_length(result); i++)
+	{
+		MonoString* pathName = mono_array_get(result, MonoString*, i);
+		paths.Add(FString(mono_string_to_utf8(pathName)));
+	}
+
+	return paths;
+}
+

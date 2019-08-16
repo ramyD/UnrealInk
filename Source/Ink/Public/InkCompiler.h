@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION()
 	TArray<FString> GetErrors();
+
+	UFUNCTION()
+	TArray<FString> GetPaths();
 };
