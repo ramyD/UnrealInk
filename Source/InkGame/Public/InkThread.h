@@ -102,6 +102,7 @@ private:
 	int mnYieldCounter;
 	bool mbInChoice;
 	bool mbKill;
+	bool mbInitialized;
 
 	UPROPERTY()
 	AInkRuntime* mpRuntime;

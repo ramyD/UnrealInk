@@ -25,6 +25,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	UInkThread* Start(TSubclassOf<UInkThread> type, FString path, bool runImmediately = true);
 
+	UFUNCTION(BlueprintCallable)
+	UInkThread* StartExisting(UInkThread* thread, FString path, bool runImmediately = true);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

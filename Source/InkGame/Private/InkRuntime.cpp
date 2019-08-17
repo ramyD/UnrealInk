@@ -115,15 +115,33 @@ FInkVar AInkRuntime::ExternalFunctionHandler(FString functionName, TArray<FInkVa
 
 UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path, bool startImmediately)
 {
+	if (mpRuntime == nullptr)
+	{
+		return nullptr;
+	}
+
 	// Instantiate the thread
 	UInkThread* pThread = NewObject<UInkThread>(this, type);
-	pThread->Initialize(path, this);
+
+	// Startup
+	return StartExisting(pThread, path, startImmediately);
+}
+
+UInkThread* AInkRuntime::StartExisting(UInkThread* thread, FString path, bool startImmediately /*= true*/)
+{
+	if (mpRuntime == nullptr)
+	{
+		return nullptr;
+	}
+
+	// Initialize thread
+	thread->Initialize(path, this);
 
 	// If we're not starting immediately, just queue
 	if (!startImmediately)
 	{
-		mThreads.Add(pThread);
-		return pThread;
+		mThreads.Add(thread);
+		return thread;
 	}
 
 	// Otherwise, pop off the current thread
@@ -134,11 +152,11 @@ UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path,
 	}
 
 	// Execute the newly created thread
-	mpCurrentThread = pThread;
-	if (!pThread->Execute(mpRuntime))
+	mpCurrentThread = thread;
+	if (!thread->Execute(mpRuntime))
 	{
 		// If it hasn't finished immediately, add it to the threads list
-		mThreads.Add(pThread);
+		mThreads.Add(thread);
 	}
 	else
 	{
@@ -146,5 +164,5 @@ UInkThread* AInkRuntime::Start(TSubclassOf<class UInkThread> type, FString path,
 		mpCurrentThread = nullptr;
 	}
 
-	return pThread;
+	return thread;
 }

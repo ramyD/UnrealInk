@@ -47,9 +47,15 @@ void UInkThread::RegisterExternalFunction(const FString& functionName, const FEx
 
 void UInkThread::Initialize(FString path, AInkRuntime* runtime)
 {
+	if (!ensureMsgf(!mbInitialized, TEXT("Thread already initialized!")))
+	{
+		return;
+	}
+
 	mStartPath = path;
 	mbIsStatePushed = true;
 	mpRuntime = runtime;
+	mbInitialized = true;
 
 	OnStartup();
 }
