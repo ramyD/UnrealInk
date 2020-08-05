@@ -139,7 +139,7 @@ TArray<UChoice*> UStory::CurrentChoices()
 	TArray<UChoice*> returnChoices;
 
 	MonoArray* Result = MonoInvoke<MonoArray*>("CurrentChoices", NULL);
-	for (int i = 0; i < mono_array_length(Result); i++)
+	for (unsigned int i = 0; i < mono_array_length(Result); i++)
 	{
 		MonoObject* MonoChoiceInstance = mono_array_get(Result, MonoObject*, i);
 		returnChoices.Add(UChoice::NewChoice(MonoChoiceInstance));
@@ -208,7 +208,7 @@ TArray<FString> UStory::CurrentTags()
 {
 	TArray<FString>  returnTags;
 	MonoArray* MonoTags = MonoInvoke<MonoArray*>("CurrentTags", NULL);
-	for (int i = 0; i < mono_array_length(MonoTags); i++)
+	for (unsigned int i = 0; i < mono_array_length(MonoTags); i++)
 	{
 		MonoString* String = mono_array_get(MonoTags, MonoString*, i);
 		returnTags.Add(FString(mono_string_to_utf8(String)));
@@ -221,7 +221,7 @@ TArray<FString> UStory::CurrentErrors()
 {
 	TArray<FString>  returnErrors;
 	MonoArray* MonoErrors = MonoInvoke<MonoArray*>("CurrentErrors", NULL);
-	for (int i = 0; i < mono_array_length(MonoErrors); i++)
+	for (unsigned int i = 0; i < mono_array_length(MonoErrors); i++)
 	{
 		MonoString* String = mono_array_get(MonoErrors, MonoString*, i);
 		returnErrors.Add(FString(mono_string_to_utf8(String)));

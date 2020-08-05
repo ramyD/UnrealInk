@@ -1,11 +1,11 @@
 #include "InkVar.h"
 
-#include "AssertionMacros.h"
+#include "Misc/AssertionMacros.h"
 
 FInkVar::FInkVar(const FInkVarInterop& other)
 	: type(other.type),
-	intVar(other.intVal),
 	floatVar(other.floatVal),
+	intVar(other.intVal),
 	stringVar(other.stringVal)
 {
 }

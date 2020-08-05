@@ -1,5 +1,6 @@
 #pragma once 
 
+#include "Modules/ModuleManager.h"
 #include "MonoBaseClass.h"
 
 #include <mono/jit/jit.h>

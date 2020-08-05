@@ -10,6 +10,7 @@ UStoryAsset::UStoryAsset()
 
 }
 
+#if WITH_EDITORONLY_DATA
 void UStoryAsset::PostInitProperties()
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject))
@@ -29,3 +30,4 @@ void UStoryAsset::GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const
 
 	Super::GetAssetRegistryTags(OutTags);
 }
+#endif
