@@ -276,7 +276,7 @@ TArray<FString> UStory::TagsForContentAtPath(FString Path)
 	void* args[1];
 	args[0] = MonoPath;
 	MonoArray* MonoTags = MonoInvoke<MonoArray*>("TagsForContentAtPath", args);
-	for (int i = 0; i < mono_array_length(MonoTags); i++)
+	for (unsigned int i = 0; i < mono_array_length(MonoTags); i++)
 	{
 		MonoString* String = mono_array_get(MonoTags, MonoString*, i);
 		returnTags.Add(FString(mono_string_to_utf8(String)));
