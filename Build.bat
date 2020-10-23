@@ -4,3 +4,5 @@ call %UE4DIR%\Engine\Build\BatchFiles\RunUAT.bat BuildPlugin -Plugin="%CD%\Unrea
 
 robocopy "%CD%\ThirdParty" "%CD%\Build\UnrealInk\ThirdParty" /E
 rem rd /s /q "./Build/UnrealInk/Intermediate"
+
+robocopy "%CD%\Build\UnrealInk" %UE4DIR%\Engine\Plugins\ /E
