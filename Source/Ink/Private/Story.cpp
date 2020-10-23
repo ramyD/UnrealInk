@@ -24,7 +24,47 @@ UStory::UStory()
 {
 
 }
+#if PLATFORM_LINUX
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue)
+{
+	for (auto& _delegate : UStory::delegateMap[UStory::FDelegateMapKey(instanceId, FString(variableName))])
+	{
+		_delegate.ExecuteIfBound(FString(variableName), FInkVar(newValue));
+	}
+}
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackFloat(int instanceId, const char* variableName, float newValue)
+{
+	for (auto& _delegate : UStory::delegateMap[UStory::FDelegateMapKey(instanceId, FString(variableName))])
+	{
+		_delegate.ExecuteIfBound(FString(variableName), FInkVar(newValue));
+	}
+}
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackString(int instanceId, const char* variableName, const char* newValue)
+{
+	for (auto& _delegate : UStory::delegateMap[UStory::FDelegateMapKey(instanceId, FString(variableName))])
+	{
+		_delegate.ExecuteIfBound(FString(variableName), FInkVar(FString(newValue)));
+	}
+}
 
+extern "C" __attribute__((visibility("default"))) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs)
+{
+	// Create argument array
+	TArray<FInkVar> arguments;
+	for (uint32 i = 0; i < numArgs; i++) {
+		arguments.Add(FInkVar(pArgs[i]));
+	}
+
+	// Get the handler for this function from the story map
+	const FExternalFunctionHandler& handler = UStory::funcMap[UStory::FDelegateMapKey(instanceId, FString(functionName))];
+
+	// Call handler
+	FInkVar result = handler.Execute(FString(functionName), arguments);
+
+	// Return result
+	return result.ToInterop();
+}
+#else
 extern "C" __declspec(dllexport) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue)
 {
 	for (auto& _delegate : UStory::delegateMap[UStory::FDelegateMapKey(instanceId, FString(variableName))])
@@ -64,6 +104,7 @@ extern "C" __declspec(dllexport) FInkVarInterop ExternalFunctionCallback(int32 i
 	// Return result
 	return result.ToInterop();
 }
+#endif //PLATFORM_LINUX
 
 UStory::~UStory()
 {

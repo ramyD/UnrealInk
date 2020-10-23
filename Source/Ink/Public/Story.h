@@ -15,10 +15,17 @@ class UStoryState;
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FVariableObserver, FString, variableName, FInkVar, newValue);
 DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(FInkVar, FExternalFunctionHandler, FString, functionName, TArray<FInkVar>, arguments);
 
+#if PLATFORM_LINUX
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue);
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackFloat(int instanceId, const char* variableName, float newValue);
+extern "C" __attribute__((visibility("default"))) void ObserverCallbackString(int instanceId, const char* variableName, const char* newValue);
+extern "C" __attribute__((visibility("default"))) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs);
+#else
 extern "C" __declspec(dllexport) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue);
 extern "C" __declspec(dllexport) void ObserverCallbackFloat(int instanceId, const char* variableName, float newValue);
 extern "C" __declspec(dllexport) void ObserverCallbackString(int instanceId, const char* variableName, const char* newValue);
 extern "C" __declspec(dllexport) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs);
+#endif //PLATFORM_LINUX
 
 UCLASS(BlueprintType)
 class INK_API UStory : public UMonoBaseClass
@@ -108,8 +115,15 @@ private:
 	static int instanceCounter;
 	int instanceId{ -1 };
 
+#if PLATFORM_LINUX
+	friend __attribute__((visibility("default"))) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue);
+	friend __attribute__((visibility("default"))) void ObserverCallbackFloat(int instanceId, const char* variableName, float newValue);
+	friend __attribute__((visibility("default"))) void ObserverCallbackString(int instanceId, const char* variableName, const char* newValue);
+	friend __attribute__((visibility("default"))) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs);
+#else
 	friend __declspec(dllexport) void ObserverCallbackInt(int instanceId, const char* variableName, int newValue);
 	friend __declspec(dllexport) void ObserverCallbackFloat(int instanceId, const char* variableName, float newValue);
 	friend __declspec(dllexport) void ObserverCallbackString(int instanceId, const char* variableName, const char* newValue);
 	friend __declspec(dllexport) FInkVarInterop ExternalFunctionCallback(int32 instanceId, const char* functionName, uint32 numArgs, FInkVarInterop* pArgs);
+#endif // PLATFORM_LINUX
 };
