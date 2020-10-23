@@ -17,7 +17,7 @@
 		{
 			"Name": "Ink",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
+			"LoadingPhase": "None",
 			"WhitelistPlatforms": [
 				"Win64",
 				"Win32",

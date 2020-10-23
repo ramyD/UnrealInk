@@ -8,6 +8,9 @@ This is a plugin allowing you to use the excellent dynamic narrative scripting s
 
 To compile, simply open up the Build.bat and fill in the UE4DIR var with the path to your 4.25 installation. Once you've compiled it and loaded it into your project, you can use the plugin either through C++ or more easily through blueprints. First though we need to go over importing Ink assets. 
 
+## Load module
+Load the module using this line at an appropriate location: FModuleManager::Get().LoadModule("Ink");
+
 ## Importing Ink Assets
 
 The plugin provides a new asset that represents ink stories (`UStoryAsset`). You can import plain .ink files and the plugin will automatically compile them for you. This way you can set up auto-reimporting of the ink files which will be recompiled on import. Simply import the .ink file as you would any other file.
