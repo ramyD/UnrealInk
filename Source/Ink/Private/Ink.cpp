@@ -79,7 +79,7 @@ void FInkModule::StartupModule()
 	FString LibraryPath;
 #if PLATFORM_WINDOWS
 	LibraryPath = FPaths::Combine(*BaseDir, TEXT("ThirdParty/Mono/lib/Win64/mono-2.0-sgen.dll"));
-#if PLATFORM_LINUX
+#elif PLATFORM_LINUX
 	LibraryPath = FPaths::Combine(*BaseDir, TEXT("ThirdParty/Mono/lib/Linux/libmono-2.0-sgen.so"));
 #elif PLATFORM_MAC
     LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/mono/mono-2.0-sgen.dylib"));
